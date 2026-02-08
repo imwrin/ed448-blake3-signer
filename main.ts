@@ -87,9 +87,11 @@ export const sign = (
 
   const P = publicKey;
 
-  const nonceRandomness = randomizer
-    ? cloneBytesConstantTime(randomizer)
-    : randomBytes(32);
+  // Check the type of `randomizer` for instantiation instead of the
+  // value itself. This in theory should be closer to constant-time.
+  const nonceRandomness = (typeof randomizer === 'undefined') ?
+    randomBytes(32) :
+    cloneBytesConstantTime(randomizer);
 
   // Generate a hedged nonce
   // k = H(DST || secret || randomness || message)
